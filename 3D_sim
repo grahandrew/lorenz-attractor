@@ -1,0 +1,49 @@
+import numpy as np
+from scipy.integrate import odeint
+import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
+
+# Function defining the system of linear ODE's.
+def lorenz(yp,t):
+    
+    # The first three lines initialize the IVP values.
+    x = yp[0]
+    y = yp[1]
+    z = yp[2]
+    
+    # The actual system of equations is below.
+    dxdt = 10*(y-x)
+    dydt = 28*x-y-x*z
+    dzdt =  x*y-(8/3)*z
+    
+    # Returns an array of the equations to be solved.
+    return [dxdt,dydt,dzdt]
+
+# These are the inital values for x,y,z
+X0 = 0
+Y0 = 1
+Z0 = 0
+y0 = [X0,Y0,Z0]
+
+# This creates an array for the time values to be plotted.
+t = np.linspace(0,50,50000)
+
+# This solves the system using scipy.integrate.odeint 
+# then splits each solution into its respective array.
+soln = odeint(lorenz,y0,t)
+X = soln[:,0]
+Y = soln[:,1]
+Z = soln[:,2]  
+
+# make the scatter plot
+fig = plt.figure(figsize=(15, 13))
+ax = fig.add_subplot(111, projection='3d')     
+ax.scatter(X,Y,Z,s=1,c='k',label='IV:[0,1,0]')
+plt.legend()       
+ax.set_xlabel('X')
+ax.set_ylabel('Y')
+ax.set_zlabel('Z')
+plt.rc('font', size=16)
+plt.title ('The Lorenz Strange Attractor')
+plt.axis('off')
+plt.show()
